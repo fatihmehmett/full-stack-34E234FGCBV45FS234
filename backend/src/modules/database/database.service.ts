@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Client } from 'pg';
 import { databaseConfig } from '../../config/database.config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
@@ -122,6 +123,7 @@ export class DatabaseService implements OnModuleInit {
       );
 
       if (userExists.rowCount === 0) {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
         await this.client.query(
           `INSERT INTO users (name, surname, email, password, phone, age, country, district, role) 
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
@@ -129,7 +131,7 @@ export class DatabaseService implements OnModuleInit {
             user.name,
             user.surname,
             user.email,
-            user.password,
+            hashedPassword,
             user.phone,
             user.age,
             user.country,

@@ -32,16 +32,19 @@ function App() {
       title: "Name",
       dataIndex: "name",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Surname",
       dataIndex: "surname",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "E-mail",
       dataIndex: "email",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Phone",
@@ -52,33 +55,47 @@ function App() {
       title: "Age",
       dataIndex: "age",
       width: "30%",
+      sorter: (a, b) => a.age - b.age,
     },
     {
       title: "Country",
       dataIndex: "country",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "District",
       dataIndex: "district",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Role",
       dataIndex: "role",
       width: "30%",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Created at",
       dataIndex: "created_at",
       width: "30%",
       render: (text) => <div>{dayjs(text).format("DD/MM/YYYY HH:mm:ss")}</div>,
+      sorter: (a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateA - dateB;
+      },
     },
     {
       title: "Updated at",
       dataIndex: "updated_at",
       width: "30%",
       render: (text) => <div>{dayjs(text).format("DD/MM/YYYY HH:mm:ss")}</div>,
+      sorter: (a, b) => {
+        const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+        const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+        return dateA - dateB;
+      },
     },
     {
       title: "Edit",
