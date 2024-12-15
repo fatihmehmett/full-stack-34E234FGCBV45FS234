@@ -19,6 +19,9 @@ export class DatabaseService implements OnModuleInit {
     // Users tablosu var mı? Yoksa oluşturma işlemi
     await this.ensureUsersTable();
 
+    //mock dataları ekleme işlemi
+    await this.addMockData();
+
     console.log('Database and table are ready!');
   }
 
@@ -72,6 +75,72 @@ export class DatabaseService implements OnModuleInit {
       console.log('Table "users" created.');
     } else {
       console.log('Table "users" already exists.');
+    }
+  }
+
+  private async addMockData() {
+    const mockUsers = [
+      {
+        name: 'Fatih Mehmet',
+        surname: 'Sagir',
+        email: 'fatih.test@example.com',
+        password: 'password123',
+        phone: '5055555555',
+        age: 27,
+        country: 'Turkey',
+        district: 'Manisa',
+        role: 'admin',
+      },
+      {
+        name: 'Jane',
+        surname: 'Smith',
+        email: 'jane.smith@example.com',
+        password: 'password123',
+        phone: '0987654321',
+        age: 25,
+        country: 'UK',
+        district: 'London',
+        role: 'user',
+      },
+      {
+        name: 'Alice',
+        surname: 'Johnson',
+        email: 'alice.johnson@example.com',
+        password: 'password123',
+        phone: '1122334455',
+        age: 28,
+        country: 'Canada',
+        district: 'Toronto',
+        role: 'moderator',
+      },
+    ];
+
+    for (const user of mockUsers) {
+      const userExists = await this.client.query(
+        `SELECT 1 FROM users WHERE email = $1`,
+        [user.email],
+      );
+
+      if (userExists.rowCount === 0) {
+        await this.client.query(
+          `INSERT INTO users (name, surname, email, password, phone, age, country, district, role) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [
+            user.name,
+            user.surname,
+            user.email,
+            user.password,
+            user.phone,
+            user.age,
+            user.country,
+            user.district,
+            user.role,
+          ],
+        );
+        console.log(`Mock user "${user.email}" added.`);
+      } else {
+        console.log(`Mock user "${user.email}" already exists.`);
+      }
     }
   }
 }
